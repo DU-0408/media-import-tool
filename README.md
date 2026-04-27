@@ -32,21 +32,21 @@ python media-import.py
 
 ## Interactive Flow
 
-👉 Paste URL or file path
-👉 Enter title (optional)
-👉 Enter year (optional)
-👉 Is this a show? (y/n)
-👉 Enter season (if show)
+👉 Paste URL or file path  
+👉 Enter title (optional)  
+👉 Enter year (optional)  
+👉 Is this a show? (y/n)  
+👉 Enter season (if show)  
 
 ## 📂 Output Structure
 
-Movies/
-  Movie Name (Year)/Movie Name (Year).mkv
+Movies/  
+  Movie Name (Year)/Movie Name (Year).mkv  
 
-Web_Shows/
-  Show Name/
-    Season 01/
-      Show Name (Year) S01E01.mkv
+Web_Shows/  
+  Show Name/  
+    Season 01/  
+      Show Name (Year) S01E01.mkv  
 
 ## 🧠 Tech Stack
 
