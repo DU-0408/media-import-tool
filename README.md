@@ -23,7 +23,7 @@ A CLI tool to automate media ingestion for Jellyfin.
 git clone https://github.com/DU-0408/media-import-tool.git
 cd media-import-tool
 pip install -r requirements.txt
-
+```
 ---
 
 ## ▶️ Usage
