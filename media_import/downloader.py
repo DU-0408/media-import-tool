@@ -4,7 +4,7 @@ Handles downloading files from URLs with a progress bar.
 import os
 import requests
 from pathlib import Path
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, DownloadColumn, TimeRemainingColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, DownloadColumn, TimeRemainingColumn, TransferSpeedColumn, TimeElapsedColumn
 
 def download_file(url: str, dest_dir: Path) -> Path:
     """
@@ -37,12 +37,15 @@ def download_file(url: str, dest_dir: Path) -> Path:
             BarColumn(),
             TaskProgressColumn(),
             DownloadColumn(),
+            TransferSpeedColumn(),
+            TimeElapsedColumn(),
             TimeRemainingColumn(),
         ) as progress:
             task = progress.add_task(f"[cyan]Downloading {filename}...", total=total_size)
             
             with open(dest_path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
+                # Use a larger chunk size (1MB) to smooth out the speed/time estimation
+                for chunk in r.iter_content(chunk_size=1024 * 1024):
                     if chunk:
                         f.write(chunk)
                         progress.update(task, advance=len(chunk))
