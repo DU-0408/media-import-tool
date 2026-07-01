@@ -10,8 +10,8 @@ ENV_PATH = Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path=ENV_PATH)
 
 # Destination Directories
-MOVIES_DIR = "/mnt/Movies"
-TV_SHOWS_DIR = "/mnt/Web_Shows"
+MOVIES_DIR = "/mnt/s1/Movies"
+TV_SHOWS_DIR = "/mnt/s1/Web_Shows"
 
 # Permissions
 OWNER = "fadmin"
