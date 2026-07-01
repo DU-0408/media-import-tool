@@ -14,7 +14,7 @@ def extract_archive(archive_path: Path, dest_dir: Path) -> Path:
     """
     console.print(f"[cyan]Extracting {archive_path.name}...[/cyan]")
     
-    extract_path = dest_dir / archive_path.stem
+    extract_path = dest_dir / f"{archive_path.stem}_extracted"
     extract_path.mkdir(parents=True, exist_ok=True)
     
     with zipfile.ZipFile(archive_path, 'r') as zip_ref:
