@@ -61,7 +61,7 @@ def rename_media(source_path: Path, config: ImportConfig, base_temp_dir: Path) -
         else:
             target_file = source_path
             
-        ext = target_file.suffix
+        ext = target_file.suffix if target_file.suffix else '.mkv'
         new_file_path = movie_dir / f"{title_str}{ext}"
         
         os.rename(target_file, new_file_path)
@@ -79,7 +79,7 @@ def rename_media(source_path: Path, config: ImportConfig, base_temp_dir: Path) -
         if config.import_type == ImportType.SINGLE_EPISODE:
             target_file = source_path
             ep_num = extract_episode_number(target_file.name) or 1
-            ext = target_file.suffix
+            ext = target_file.suffix if target_file.suffix else '.mkv'
             new_file_path = season_dir / f"{title_str} S{season_num:02d}E{ep_num:02d}{ext}"
             os.rename(target_file, new_file_path)
             

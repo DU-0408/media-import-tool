@@ -54,7 +54,8 @@ def main():
                 sys.exit(1)
 
         # Step 2: Extract if it's a TV show ZIP
-        if config.media_type == MediaType.TV_SHOW and target_path.suffix.lower() == '.zip':
+        import zipfile
+        if config.media_type == MediaType.TV_SHOW and zipfile.is_zipfile(target_path):
             target_path = extract_archive(target_path, base_temp_dir)
 
         # Step 3: Rename and structure
