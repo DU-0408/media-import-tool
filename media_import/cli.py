@@ -5,6 +5,7 @@ Interactive command-line interface for collecting import options.
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import IntPrompt, Prompt
+import sys
 
 from .config import (
     ImportConfig,
@@ -31,9 +32,14 @@ def run_cli() -> ImportConfig:
     source_choice = IntPrompt.ask(
         "[bold]Select Source[/bold]\n"
         "1. Local File\n"
-        "2. Download URL",
-        choices=["1", "2"],
+        "2. Download URL\n"
+        "3. Exit",
+        choices=["1", "2", "3"],
     )
+
+    if source_choice == 3:
+        console.print("\n[yellow]Exiting Media Import Tool.[/yellow]")
+        sys.exit(0)
 
     source_type = (
         SourceType.LOCAL
