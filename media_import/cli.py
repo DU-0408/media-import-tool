@@ -1,10 +1,10 @@
 """
-Interactive command-line interface for collecting import options.
+Interactive command-line interface for collecting import options using questionary.
 """
 
 from rich.console import Console
 from rich.panel import Panel
-from rich.prompt import IntPrompt, Prompt
+import questionary
 import sys
 
 from .config import (
@@ -29,90 +29,86 @@ def run_cli() -> ImportConfig:
 
     console.print()
 
-    source_choice = IntPrompt.ask(
-        "[bold]Select Source[/bold]\n"
-        "1. Local File\n"
-        "2. Download URL\n"
-        "3. Exit",
-        choices=["1", "2", "3"],
-    )
+    source_choice = questionary.select(
+        "Select Source:",
+        choices=[
+            "Local File",
+            "Download URL",
+            "Exit"
+        ]
+    ).ask()
 
-    if source_choice == 3:
+    if source_choice == "Exit" or source_choice is None:
         console.print("\n[yellow]Exiting Media Import Tool.[/yellow]")
         sys.exit(0)
 
-    source_type = (
-        SourceType.LOCAL
-        if source_choice == 1
-        else SourceType.URL
-    )
+    source_type = SourceType.LOCAL if source_choice == "Local File" else SourceType.URL
 
-    console.print()
+    media_choice = questionary.select(
+        "Select Media Type:",
+        choices=[
+            "Movie",
+            "TV Show"
+        ]
+    ).ask()
+    
+    if media_choice is None:
+        sys.exit(0)
 
-    media_choice = IntPrompt.ask(
-        "[bold]Select Media Type[/bold]\n"
-        "1. Movie\n"
-        "2. TV Show",
-        choices=["1", "2"],
-    )
-
-    media_type = (
-        MediaType.MOVIE
-        if media_choice == 1
-        else MediaType.TV_SHOW
-    )
+    media_type = MediaType.MOVIE if media_choice == "Movie" else MediaType.TV_SHOW
 
     if media_type == MediaType.MOVIE:
         import_type = ImportType.MOVIE
         season = None
-
     else:
-        console.print()
+        import_choice = questionary.select(
+            "Select Import Type:",
+            choices=[
+                "Single Episode",
+                "Full Season"
+            ]
+        ).ask()
+        
+        if import_choice is None:
+            sys.exit(0)
 
-        import_choice = IntPrompt.ask(
-            "[bold]Select Import Type[/bold]\n"
-            "1. Single Episode\n"
-            "2. Full Season",
-            choices=["1", "2"],
-        )
+        import_type = ImportType.SINGLE_EPISODE if import_choice == "Single Episode" else ImportType.FULL_SEASON
 
-        import_type = (
-            ImportType.SINGLE_EPISODE
-            if import_choice == 1
-            else ImportType.FULL_SEASON
-        )
+        season_str = questionary.text(
+            "Season Number:",
+            default="1",
+            validate=lambda text: text.isdigit() and int(text) > 0 or "Please enter a valid positive number"
+        ).ask()
+        
+        if season_str is None:
+            sys.exit(0)
+            
+        season = int(season_str)
 
-        season = IntPrompt.ask(
-            "Season Number",
-            default=1,
-            choices=[str(i) for i in range(1, 100)]
-        )
+    source = questionary.text("Local file path or download URL:").ask()
+    if source is None:
+        sys.exit(0)
 
-    console.print()
+    title = questionary.text("Title (optional):").ask()
+    if title is None:
+        sys.exit(0)
+    title = title.strip() or None
 
-    source = Prompt.ask("Local file path or download URL")
-
-    title = Prompt.ask("Title", default="").strip() or None
-
-    year = None
-
-    while True:
-        year_text = Prompt.ask("Year", default="").strip()
-
-        if not year_text:
-            break
-
-        if year_text.isdigit():
-            year = int(year_text)
-            break
-
-        console.print("[red]Please enter a valid year.[/red]")
+    year_str = questionary.text(
+        "Year (optional):",
+        validate=lambda text: True if not text.strip() else (text.isdigit() or "Please enter a valid year")
+    ).ask()
+    
+    if year_str is None:
+        sys.exit(0)
+        
+    year = int(year_str) if year_str.strip() else None
 
     return ImportConfig(
         source_type=source_type,
         media_type=media_type,
         import_type=import_type,
-        source=source,
+        source=source.strip(),
         title=title,
         year=year,
         season=season,
