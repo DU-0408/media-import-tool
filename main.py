@@ -37,6 +37,20 @@ def main():
         console.print("\n[yellow]Import cancelled by user.[/yellow]")
         sys.exit(0)
 
+    # Pre-flight check: see if the destination folder already exists
+    import questionary
+    final_dest_dir = Path(MOVIES_DIR) if config.media_type == MediaType.MOVIE else Path(TV_SHOWS_DIR)
+    title_str = config.title or "Unknown"
+    year_str = f" ({config.year})" if config.year else ""
+    expected_path = final_dest_dir / f"{title_str}{year_str}"
+    
+    if expected_path.exists():
+        console.print(f"\n[yellow]Warning: The destination '{expected_path}' already exists.[/yellow]")
+        overwrite = questionary.confirm("Do you want to update/overwrite the existing files?").ask()
+        if not overwrite:
+            console.print("[yellow]Import cancelled by user.[/yellow]")
+            sys.exit(0)
+
     console.print()
     console.print("[bold cyan]Starting Import Process...[/bold cyan]")
     
