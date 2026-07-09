@@ -62,14 +62,7 @@ def main():
         if config.source_type == SourceType.URL:
             target_path = download_file(config.source, base_temp_dir)
         else:
-            import shlex
-            try:
-                # shlex will properly unescape bash-style escaped paths (like spaces with backslashes)
-                parsed_source = shlex.split(config.source)[0]
-            except Exception:
-                parsed_source = config.source
-                
-            target_path = Path(parsed_source).resolve()
+            target_path = Path(config.source).resolve()
             if not target_path.exists():
                 console.print(f"[red]Local file not found: {target_path}[/red]")
                 sys.exit(1)
