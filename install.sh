@@ -37,12 +37,25 @@ SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 # Intercept update command
 if [ "$1" == "update" ]; then
-    echo "Updating Media Import Tool..."
+    echo "Checking for updates..."
     cd "$SCRIPT_DIR" || exit 1
-    git pull
-    "${SCRIPT_DIR}/venv/bin/pip" install -r requirements.txt
-    echo -e "\nUpdate complete! 🎉"
-    exit 0
+    
+    # Fetch latest remote info
+    git fetch >/dev/null 2>&1
+    
+    LOCAL=$(git rev-parse @)
+    REMOTE=$(git rev-parse @{u})
+    
+    if [ $LOCAL = $REMOTE ]; then
+        echo "Tool is already up-to-date! No updates needed."
+        exit 0
+    else
+        echo "Updates found! Installing latest changes..."
+        git pull
+        "${SCRIPT_DIR}/venv/bin/pip" install -r requirements.txt
+        echo -e "\nUpdate complete! 🎉"
+        exit 0
+    fi
 fi
 
 sudo "${SCRIPT_DIR}/venv/bin/python" "${SCRIPT_DIR}/main.py" "$@"
