@@ -11,6 +11,14 @@ then
     exit 1
 fi
 
+# Check for unrar
+if ! command -v unrar &> /dev/null
+then
+    echo "unrar is required for extracting RAR archives."
+    echo "Attempting to install unrar via apt-get..."
+    sudo apt-get update && sudo apt-get install -y unrar || echo "Failed to install unrar. Please install it manually."
+fi
+
 # Create virtual environment
 echo "Creating virtual environment..."
 python3 -m venv venv

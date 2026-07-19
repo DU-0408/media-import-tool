@@ -67,9 +67,9 @@ def main():
                 console.print(f"[red]Local file not found: {target_path}[/red]")
                 sys.exit(1)
 
-        # Step 2: Extract if it's a TV show ZIP
-        import zipfile
-        if config.media_type == MediaType.TV_SHOW and zipfile.is_zipfile(target_path):
+        # Step 2: Extract if it's a TV show archive (ZIP/RAR)
+        from media_import.extractor import is_supported_archive
+        if config.media_type == MediaType.TV_SHOW and is_supported_archive(target_path):
             target_path = extract_archive(target_path, base_temp_dir)
 
         # Step 3: Rename and structure
