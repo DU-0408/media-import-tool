@@ -8,7 +8,7 @@ from pathlib import Path
 from rich.console import Console
 
 from media_import.cli import run_cli
-from media_import.config import SourceType, MediaType
+from media_import.config import SourceType, MediaType, ImportConfig
 from media_import.constants import (
     MOVIES_DIR,
     TV_SHOWS_DIR,
