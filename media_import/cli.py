@@ -48,19 +48,24 @@ def run_cli() -> ImportConfig:
         "Select Media Type:",
         choices=[
             "Movie",
-            "TV Show"
+            "TV Show",
+            "Special"
         ]
     ).ask()
     
     if media_choice is None:
         sys.exit(0)
 
-    media_type = MediaType.MOVIE if media_choice == "Movie" else MediaType.TV_SHOW
-
-    if media_type == MediaType.MOVIE:
+    if media_choice == "Movie":
+        media_type = MediaType.MOVIE
         import_type = ImportType.MOVIE
         season = None
+    elif media_choice == "Special":
+        media_type = MediaType.SPECIAL
+        import_type = ImportType.SPECIAL
+        season = None
     else:
+        media_type = MediaType.TV_SHOW
         import_choice = questionary.select(
             "Select Import Type:",
             choices=[
@@ -84,6 +89,11 @@ def run_cli() -> ImportConfig:
             sys.exit(0)
             
         season = int(season_str)
+        
+    is_marvel = questionary.confirm(
+        "Is this part of the Marvel Universe?",
+        default=False
+    ).ask()
 
     source = questionary.text("Local file path or download URL:").ask()
     if source is None:
@@ -112,4 +122,5 @@ def run_cli() -> ImportConfig:
         title=title,
         year=year,
         season=season,
+        is_marvel=is_marvel,
     )

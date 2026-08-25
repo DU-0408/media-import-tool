@@ -12,6 +12,10 @@ from media_import.config import SourceType, MediaType
 from media_import.constants import (
     MOVIES_DIR,
     TV_SHOWS_DIR,
+    SPECIALS_DIR,
+    MARVEL_MOVIES_DIR,
+    MARVEL_SHOWS_DIR,
+    MARVEL_SPECIALS_DIR,
     OWNER,
     GROUP,
     DIR_PERMS,
@@ -37,9 +41,25 @@ def main():
         console.print("\n[yellow]Import cancelled by user.[/yellow]")
         sys.exit(0)
 
+    def get_destination_dir(cfg: ImportConfig) -> Path:
+        if cfg.is_marvel:
+            if cfg.media_type == MediaType.MOVIE:
+                return Path(MARVEL_MOVIES_DIR)
+            elif cfg.media_type == MediaType.SPECIAL:
+                return Path(MARVEL_SPECIALS_DIR)
+            else:
+                return Path(MARVEL_SHOWS_DIR)
+        else:
+            if cfg.media_type == MediaType.MOVIE:
+                return Path(MOVIES_DIR)
+            elif cfg.media_type == MediaType.SPECIAL:
+                return Path(SPECIALS_DIR)
+            else:
+                return Path(TV_SHOWS_DIR)
+
     # Pre-flight check: see if the destination folder already exists
     import questionary
-    final_dest_dir = Path(MOVIES_DIR) if config.media_type == MediaType.MOVIE else Path(TV_SHOWS_DIR)
+    final_dest_dir = get_destination_dir(config)
     title_str = config.title or "Unknown"
     year_str = f" ({config.year})" if config.year else ""
     expected_path = final_dest_dir / f"{title_str}{year_str}"
@@ -79,7 +99,6 @@ def main():
         set_permissions(structured_dir, OWNER, GROUP, DIR_PERMS, FILE_PERMS)
 
         # Step 5: Move to final destination
-        final_dest_dir = Path(MOVIES_DIR) if config.media_type == MediaType.MOVIE else Path(TV_SHOWS_DIR)
         final_dest = move_media(structured_dir, final_dest_dir)
 
         # Step 6: Notify Jellyfin

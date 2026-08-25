@@ -46,8 +46,8 @@ def rename_media(source_path: Path, config: ImportConfig, base_temp_dir: Path) -
     year_str = f" ({config.year})" if config.year else ""
     title_str = f"{config.title}{year_str}"
     
-    if config.media_type == MediaType.MOVIE:
-        # Structure: Movie Title (Year)/Movie Title (Year).ext
+    if config.media_type in (MediaType.MOVIE, MediaType.SPECIAL):
+        # Structure: Title (Year)/Title (Year).ext
         movie_dir = base_temp_dir / title_str
         movie_dir.mkdir(parents=True, exist_ok=True)
         
@@ -56,7 +56,7 @@ def rename_media(source_path: Path, config: ImportConfig, base_temp_dir: Path) -
             videos = get_video_files(source_path)
             if not videos:
                 raise ValueError("No video files found in the extracted archive.")
-            # Assuming the largest video file is the movie
+            # Assuming the largest video file is the movie/special
             target_file = max(videos, key=lambda p: p.stat().st_size)
         else:
             target_file = source_path

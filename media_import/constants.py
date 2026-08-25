@@ -12,6 +12,11 @@ load_dotenv(dotenv_path=ENV_PATH)
 # Destination Directories
 MOVIES_DIR = "/mnt/s1/Movies"
 TV_SHOWS_DIR = "/mnt/s1/Web_Shows"
+SPECIALS_DIR = "/mnt/s1/Specials"
+
+MARVEL_MOVIES_DIR = "/mnt/s1/Marvel/Movies"
+MARVEL_SHOWS_DIR = "/mnt/s1/Marvel/Shows"
+MARVEL_SPECIALS_DIR = "/mnt/s1/Marvel/Specials"
 
 # Permissions
 OWNER = "fadmin"

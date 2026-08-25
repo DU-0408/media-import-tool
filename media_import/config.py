@@ -15,12 +15,14 @@ class SourceType(Enum):
 class MediaType(Enum):
     MOVIE = auto()
     TV_SHOW = auto()
+    SPECIAL = auto()
 
 
 class ImportType(Enum):
     MOVIE = auto()
     SINGLE_EPISODE = auto()
     FULL_SEASON = auto()
+    SPECIAL = auto()
 
 
 @dataclass
@@ -34,6 +36,8 @@ class ImportConfig:
     title: str | None = None
     year: int | None = None
     season: int | None = None
+
+    is_marvel: bool = False
 
     working_directory: Path | None = None
     downloaded: bool = False
